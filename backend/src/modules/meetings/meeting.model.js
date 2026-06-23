@@ -4,6 +4,7 @@ const checkConflicts = (meeting_date, participants) => {
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT
+        m.id,
         m.meeting_time,
         m.end_time,
         ma.user_id
@@ -21,6 +22,19 @@ const checkConflicts = (meeting_date, participants) => {
       (err, results) => {
         if (err) return reject(err);
         resolve(results);
+      }
+    );
+  });
+};
+
+const getAttendeeIds = (meetingId) => {
+  return new Promise((resolve, reject) => {
+    db.query(
+      "SELECT user_id FROM meeting_attendees WHERE meeting_id = ?",
+      [meetingId],
+      (err, results) => {
+        if (err) return reject(err);
+        resolve(results.map((r) => r.user_id));
       }
     );
   });
@@ -101,7 +115,7 @@ const getMeetingsByUserId = (
     const sql = `
       SELECT
         m.*,
-        ma.status
+        ma.status AS attendee_status
       FROM meetings m
       JOIN meeting_attendees ma
         ON m.id = ma.meeting_id
@@ -131,38 +145,45 @@ const getUsers = () => {
   });
 };
 
-const deleteMeetingAttendees = (
+const cancelMeeting = (
   meetingId
 ) => {
-  return new Promise((resolve, reject) => {
-    db.query(
-      "DELETE FROM meeting_attendees WHERE meeting_id = ?",
-      [meetingId],
-      (err, result) => {
-        if (err) return reject(err);
-        resolve(result);
-      }
-    );
-  });
+  return new Promise(
+    (resolve, reject) => {
+      db.query(
+        "UPDATE meetings SET status = 'cancelled' WHERE id = ?",
+        [meetingId],
+        (err, result) => {
+          if (err)
+            return reject(err);
+
+          resolve(result);
+        }
+      );
+    }
+  );
 };
 
-const deleteMeeting = (meetingId) => {
-  return new Promise((resolve, reject) => {
-    db.query(
-      "DELETE FROM meetings WHERE id = ?",
-      [meetingId],
-      (err, result) => {
-        if (err) return reject(err);
-        resolve(result);
-      }
-    );
-  });
-};
+// const deleteMeeting = (meetingId) => {
+//   return new Promise((resolve, reject) => {
+//     db.query(
+//       "DELETE FROM meetings WHERE id = ?",
+//       [meetingId],
+//       (err, result) => {
+//         if (err) return reject(err);
+//         resolve(result);
+//       }
+//     );
+//   });
+// };
 
 const updateMeeting = (
   id,
   title,
-  description
+  description,
+  meeting_date,
+  meeting_time,
+  end_time
 ) => {
   return new Promise((resolve, reject) => {
     db.query(
@@ -170,10 +191,13 @@ const updateMeeting = (
       UPDATE meetings
       SET
         title = ?,
-        description = ?
+        description = ?,
+        meeting_date = ?,
+        meeting_time = ?,
+        end_time = ?
       WHERE id = ?
       `,
-      [title, description, id],
+      [title, description, meeting_date, meeting_time, end_time, id],
       (err, result) => {
         if (err) return reject(err);
         resolve(result);
@@ -349,8 +373,8 @@ module.exports = {
   createMeetingAttendee,
   getMeetingsByUserId,
   getUsers,
-  deleteMeetingAttendees,
-  deleteMeeting,
+  cancelMeeting,
+  // deleteMeeting,
   updateMeeting,
   getMeetingsForAvailability,
   getInvitations,
@@ -358,4 +382,5 @@ module.exports = {
   declineInvitation,
   searchUsers,
   getMeetingParticipants,
+  getAttendeeIds,
 };

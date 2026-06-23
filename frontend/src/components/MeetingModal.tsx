@@ -57,6 +57,7 @@ function MeetingModal({
   selectedMeeting,
 }: MeetingModalProps) {
 
+
   const [participants, setParticipants] =
     useState<any[]>([]);
   const [title, setTitle] = useState(
@@ -79,6 +80,10 @@ function MeetingModal({
   const [searchResults, setSearchResults] =
     useState<any[]>([]);
 
+  const [meetingDate, setMeetingDate] = useState(date);
+  const [meetingTime, setMeetingTime] = useState(selectedMeeting?.meeting_time || time);
+  // const [meetingEndTime, setMeetingEndTime]=useState(selectedMeeting?.EndTime || getEndTime(time));
+
 
   const fetchParticipants =
     async (meetingId: number) => {
@@ -90,7 +95,7 @@ function MeetingModal({
 
         const response =
           await fetch(
-            `http://localhost:5000/api/meetings/${meetingId}/participants`,
+            `https://localhost:5000/api/meetings/${meetingId}/participants`,
             {
               headers: {
                 Authorization:
@@ -118,12 +123,19 @@ function MeetingModal({
     }
 
   }, [selectedMeeting]);
+
+
   const getEndTime = (
     startTime: string
   ) => {
+    if (!startTime) return "";
     const dateObj = new Date(
       `2000-01-01T${startTime}`
     );
+
+    if (isNaN(dateObj.getTime())) {
+      return "";
+    }
 
     dateObj.setMinutes(
       dateObj.getMinutes() + 30
@@ -133,9 +145,8 @@ function MeetingModal({
       .toTimeString()
       .slice(0, 5);
   };
+  const [meetingEndTime, setMeetingEndTime] = useState(selectedMeeting?.end_time || getEndTime(meetingTime));
 
-  const endTime =
-    getEndTime(time);
   const handleSave = async () => {
     try {
       const token =
@@ -143,8 +154,8 @@ function MeetingModal({
 
       const response = await fetch(
         selectedMeeting
-          ? `http://localhost:5000/api/meetings/${selectedMeeting.id}`
-          : "http://localhost:5000/api/meetings",
+          ? `https://localhost:5000/api/meetings/${selectedMeeting.id}`
+          : "https://localhost:5000/api/meetings",
         {
           method: selectedMeeting
             ? "PUT"
@@ -169,11 +180,11 @@ function MeetingModal({
 
             description,
 
-            meeting_date: date,
+            meeting_date: meetingDate,
 
-            meeting_time: time,
+            meeting_time: meetingTime,
 
-            end_time: endTime,
+            end_time: meetingEndTime,
           }),
         }
       );
@@ -206,24 +217,21 @@ function MeetingModal({
     }
   };
 
-  const handleDelete = async () => {
+  const handleCancel = async () => {
     try {
-      const token =
-        localStorage.getItem("token");
+      const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `http://localhost:5000/api/meetings/${selectedMeeting.id}`,
+        `https://localhost:5000/api/meetings/${selectedMeeting.id}/cancel`,
         {
-          method: "DELETE",
+          method: "PATCH",
           headers: {
-            Authorization:
-              `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      const data =
-        await response.json();
+      const data = await response.json();
 
       if (!response.ok) {
         toast.error(data.message);
@@ -232,12 +240,17 @@ function MeetingModal({
 
       await fetchMeetings();
 
-      toast.success("Meeting Deleted Successfully");
+      toast.success(
+        "Meeting Cancelled Successfully"
+      );
+
       onClose();
     } catch (error) {
       console.error(error);
 
-      toast.error("Failed to delete meeting");
+      toast.error(
+        "Failed to cancel meeting"
+      );
     }
   };
 
@@ -258,7 +271,7 @@ function MeetingModal({
 
       const response =
         await fetch(
-          `http://localhost:5000/api/meetings/search-users?search=${value}`,
+          `https://localhost:5000/api/meetings/search-users?search=${value}`,
           {
             headers: {
               Authorization:
@@ -360,6 +373,78 @@ function MeetingModal({
                   )
                 }
               />
+
+              <div className="grid grid-cols-3 gap-6 pt-4">
+
+                {/* Start Date */}
+                <div>
+                  <label className="block text-sm text-gray-500 mb-2">
+                    Start date
+                  </label>
+
+                  <input
+                    type="date"
+                    value={meetingDate}
+                    onChange={(e) =>
+                      setMeetingDate(e.target.value)
+                    }
+                    className="
+        w-full
+        border-b
+        border-gray-300
+        pb-2
+        focus:outline-none
+      "
+                  />
+                </div>
+
+                {/* Start Time */}
+                <div>
+                  <label className="block text-sm text-gray-500 mb-2">
+                    Start time
+                  </label>
+
+                  <input
+                    type="time"
+                    value={meetingTime}
+                    onChange={(e) =>
+                      setMeetingTime(e.target.value)
+                    }
+                    className="
+        w-full
+        border-b
+        border-gray-300
+        pb-2
+        focus:outline-none
+      "
+                  />
+                </div>
+
+                {/* End Time */}
+                <div>
+                  <label className="block text-sm text-gray-500 mb-2">
+                    End time
+                  </label>
+
+                  <input
+                    type="time"
+                    value={meetingEndTime}
+                    onChange={(e) =>
+                      setMeetingEndTime(
+                        e.target.value
+                      )
+                    }
+                    className="
+        w-full
+        border-b
+        border-gray-300
+        pb-2
+        focus:outline-none
+      "
+                  />
+                </div>
+
+              </div>
 
               {/* Selected Users */}
               <div className="flex flex-wrap gap-2">
@@ -616,13 +701,13 @@ function MeetingModal({
           <button
             onClick={onClose}
             className="px-6 py-3 border rounded-xl">
-            Cancel
+            Close
           </button>
           <div className="flex gap-3"> {selectedMeeting && (
             <button
-              onClick={handleDelete}
+              onClick={handleCancel}
               className="px-4 py-2 bg-red-500 text-white rounded-lg">
-              Delete
+              Cancelled
             </button>
           )}
 

@@ -6,10 +6,7 @@ const {
   markAllRead,
 } = require("./notification.model");
 
-/**
- * GET /api/notifications
- * Called on Dashboard load — returns all notifications for the logged-in user.
- */
+
 router.get("/", verifyToken, async (req, res) => {
   try {
     const notifications = await getNotifications(req.user.id);
@@ -21,10 +18,7 @@ router.get("/", verifyToken, async (req, res) => {
   }
 });
 
-/**
- * PATCH /api/notifications/read
- * Marks all notifications as read for the logged-in user.
- */
+
 router.patch("/read", verifyToken, async (req, res) => {
   try {
     await markAllRead(req.user.id);

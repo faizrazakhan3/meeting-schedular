@@ -4,10 +4,11 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import Dashboard from "./pages/Dashboard";
 import CreateMeeting from "./pages/CreateMeeting";
+import MeetingRoom from "./pages/MeetingRoom";
 import { Toaster } from 'react-hot-toast';
 import ProtectedRoute from "./protectedRoute";
 
-type PAGES = 'login' | 'register' | 'dashboard' | 'profile' | 'createMeeting';
+type PAGES = 'login' | 'register' | 'dashboard' | 'profile' | 'createMeeting' | 'meetingRoom';
 
 const ROUTES: Record<PAGES, string> = {
   login: '/login',
@@ -15,6 +16,7 @@ const ROUTES: Record<PAGES, string> = {
   dashboard: '/dashboard',
   profile: "/profile",
   createMeeting: '/create-meeting',
+  meetingRoom: '/meeting/:roomId',
 };
 
 function App() {
@@ -28,6 +30,7 @@ function App() {
         <Route path={ROUTES.dashboard} element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path={ROUTES.profile} element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path={ROUTES.createMeeting} element={<ProtectedRoute><CreateMeeting /></ProtectedRoute>} />
+        <Route path={ROUTES.meetingRoom} element={<ProtectedRoute><MeetingRoom /></ProtectedRoute>} />
       </Routes>
 
     </BrowserRouter>

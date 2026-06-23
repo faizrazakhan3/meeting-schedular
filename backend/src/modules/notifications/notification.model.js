@@ -31,9 +31,7 @@ const getNotifications = (userId) => {
   });
 };
 
-/**
- * Mark all notifications as read for a user.
- */
+
 const markAllRead = (userId) => {
   return new Promise((resolve, reject) => {
     db.query(

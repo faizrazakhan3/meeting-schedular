@@ -6,7 +6,8 @@ const {
     getMeetings,
     getUsers,
     getMeetingParticipants,
-    deleteMeeting,
+    // deleteMeeting,
+    cancelMeeting,
     updateMeeting,
     getInvitations,
     acceptInvitation,
@@ -38,11 +39,17 @@ router.get(
     getUsers
 );
 
-router.delete(
-    "/:id",
+router.patch(
+    "/:id/cancel",
     verifyToken,
-    deleteMeeting
+    cancelMeeting
 );
+
+// router.delete(
+//     "/:id",
+//     verifyToken,
+//     deleteMeeting
+// );
 
 router.put(
     "/:id",

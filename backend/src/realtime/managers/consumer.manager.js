@@ -1,9 +1,7 @@
 const roomManager = require('./room.manager');
 
 class ConsumerManager {
-    /**
-     * Create a consumer on the transport
-     */
+    
     async consume(socketId, roomId, transportId, producerId, rtpCapabilities) {
         const room = roomManager.getRoom(roomId);
         if (!room) throw new Error('Room not found');

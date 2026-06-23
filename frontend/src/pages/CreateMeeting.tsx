@@ -35,7 +35,7 @@ const [selectedTime, setSelectedTime] =
       localStorage.getItem("token");
 
     const response = await fetch(
-      "http://localhost:5000/api/meetings",
+      "https://localhost:5000/api/meetings",
       {
         headers: {
           Authorization:

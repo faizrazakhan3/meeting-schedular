@@ -3,49 +3,69 @@ const https = require('https');
 const { Server } = require('socket.io');
 const fs = require('fs');
 const path = require('path');
-const selfsigned = require('selfsigned');
 
 const mediasoupConfig = require('./config/mediasoup.config');
 const workerManager = require('./realtime/managers/worker.manager');
 const setupSocketHandlers = require('./realtime/socket/socket.handler');
 
-require("./config/db");
+const db = require("./config/db");
 
 const app = require("./app");
 const { initCronJobs } = require("./modules/notifications/cron");
 
-// Start cron jobs
 initCronJobs();
+
+const seedNotifications = async () => {
+  try {
+    const result = await new Promise((resolve, reject) => {
+      db.query('SELECT COUNT(*) as count FROM notifications', (err, rows) => {
+        if (err) return reject(err);
+        resolve(rows);
+      });
+    });
+    if (result[0].count === 0) {
+      console.log('Seeding initial notifications...');
+      const sample = [
+        [1, 'invite',   101, 'You have been invited to meeting 101'],
+        [1, 'reminder',102, 'Reminder: meeting 102 starts soon'],
+        [2, 'invite',   103, 'You have been invited to meeting 103']
+      ];
+      await new Promise((resolve, reject) => {
+        db.query(
+          'INSERT INTO notifications (user_id, type, meeting_id, message) VALUES ?',
+          [sample],
+          (err) => err ? reject(err) : resolve()
+        );
+      });
+      console.log('Sample notifications seeded.');
+    }
+  } catch (e) {
+    console.error('Error seeding notifications:', e);
+  }
+};
 
 const PORT = process.env.PORT || 5000;
 
 async function startApp() {
     try {
-        let privateKey, certificate;
+        await seedNotifications();
+        
         const certPath = path.join(__dirname, '..', 'cert.pem');
         const keyPath = path.join(__dirname, '..', 'key.pem');
 
-        if (fs.existsSync(certPath) && fs.existsSync(keyPath)) {
-            privateKey = fs.readFileSync(keyPath, 'utf8');
-            certificate = fs.readFileSync(certPath, 'utf8');
-        } else {
-            console.log('Generating self-signed SSL certificates for HTTPS...');
-
-            const attrs = [{ name: 'commonName', value: mediasoupConfig.listenIp }];
-            const pems = await selfsigned.generate(attrs, { days: 365 });
-
-            privateKey = pems.private;
-            certificate = pems.cert;
-
-            fs.writeFileSync(keyPath, privateKey);
-            fs.writeFileSync(certPath, certificate);
-
-            console.log('Certificates generated successfully.');
+        if (!fs.existsSync(certPath) || !fs.existsSync(keyPath)) {
+            console.error('ERROR: SSL certificates not found!');
+            process.exit(1);
         }
 
-        const server = https.createServer({ key: privateKey, cert: certificate }, app);
+        const privateKey = fs.readFileSync(keyPath, 'utf8');
+        const certificate = fs.readFileSync(certPath, 'utf8');
 
-        // Initialize Socket.IO
+        const server = https.createServer({
+            key: privateKey,
+            cert: certificate
+        }, app);
+
         const io = new Server(server, {
             cors: {
                 origin: '*'
@@ -66,13 +86,9 @@ async function startApp() {
             console.log(`Server is running in ${mode} mode!`);
             console.log(`Local Access: https://localhost:${PORT}`);
             console.log(`Network/Public Access: https://${announcedIp}:${PORT}`);
-            if (!process.env.PUBLIC_IP) {
-                console.log('Note: To run in production over the internet, provide a PUBLIC_IP environment variable.');
-            }
             console.log('====================================');
         });
 
-        // For shutdown down the server 
         const shutdown = async () => {
             console.log('\nShutting down server...');
             try {
@@ -96,4 +112,4 @@ async function startApp() {
     }
 }
 
-startApp();
+startApp();

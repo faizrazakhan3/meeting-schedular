@@ -40,24 +40,31 @@ function WeekGrid({
     .split("T")[0];
 
   return {
-        id: meeting.id,
-        title: meeting.title,
-        start: `${date}T${meeting.meeting_time}:00`,
-        end: `${date}T${meeting.end_time}:00`,
-
-        extendedProps: {
-          meeting,
-          meetingTime:
-            meeting.meeting_time,
-          endTime:
-            meeting.end_time,
-          description:
-            meeting.description ||
-            "No description",
-        },
-      };
+  id: meeting.id,
+  title:
+    meeting.status === "cancelled"
+      ? `🚫 ${meeting.title}`
+      : meeting.title,
+  start: `${date}T${meeting.meeting_time}:00`,
+  end: `${date}T${meeting.end_time}:00`,
+  backgroundColor:
+    meeting.status === "cancelled"
+      ? "#8B7355"
+      : undefined,
+  borderColor:
+    meeting.status === "cancelled"
+      ? "#8B7355"
+      : undefined,
+  extendedProps: {
+    meeting,
+    meetingTime: meeting.meeting_time,
+    endTime: meeting.end_time,
+    description:
+      meeting.description ||
+      "No description",
+  },
+};
     });
-
   return (
     <FullCalendar
       plugins={[

@@ -2,7 +2,7 @@ const {
   createMeetingService,
   getMeetingsService,
   getUsersService,
-  deleteMeetingService,
+  cancelMeetingService,
   updateMeetingService,
   checkAvailabilityService,
   getInvitationsService,
@@ -70,24 +70,23 @@ const getUsers = async (
   }
 };
 
-const deleteMeeting = async (
+const cancelMeeting = async (
   req,
   res
 ) => {
   try {
     const result =
-      await deleteMeetingService(
+      await cancelMeetingService(
         req.params.id
       );
 
-    res.json(result);
+    res.status(200).json(result);
   } catch (error) {
-    res
-      .status(error.status || 500)
-      .json({
-        message: error.message,
-        error: error.error,
-      });
+    res.status(
+      error.status || 500
+    ).json({
+      message: error.message,
+    });
   }
 };
 
@@ -96,14 +95,17 @@ const updateMeeting = async (
   res
 ) => {
   try {
-    const { title, description } =
+    const { title, description, meeting_date, meeting_time, end_time } =
       req.body;
 
     const result =
       await updateMeetingService(
         req.params.id,
         title,
-        description
+        description,
+        meeting_date,
+        meeting_time,
+        end_time
       );
 
     res.json(result);
@@ -247,7 +249,7 @@ module.exports = {
   createMeeting,
   getMeetings,
   getUsers,
-  deleteMeeting,
+  cancelMeeting,
   updateMeeting,
   checkAvailabilty,
   getInvitations,

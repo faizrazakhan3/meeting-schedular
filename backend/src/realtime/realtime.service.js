@@ -6,14 +6,11 @@ const Peer = require('./stores/peer.store');
 
 class RealtimeService {
     async joinRoom(socketId, roomId) {
-        // Get or create the room (and its Router)
         const room = await roomManager.getOrCreateRoom(roomId);
         
-        // Create a new Peer object to track this user's state
         const peer = new Peer(socketId);
         room.addPeer(peer);
         
-        // Return the router's RTP Capabilities
         return {
             routerRtpCapabilities: room.router.rtpCapabilities
         };

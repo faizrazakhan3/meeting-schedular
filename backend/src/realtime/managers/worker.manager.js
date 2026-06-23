@@ -67,5 +67,4 @@ class WorkerManager {
     }
 }
 
-// Export a singleton instance
 module.exports = new WorkerManager();

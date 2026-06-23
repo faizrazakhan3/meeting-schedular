@@ -1,0 +1,15 @@
+{
+  "name": "meeting-scheduler",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\"",
+    "frontend-dev": "npm run dev --prefix frontend",
+    "backend-dev": "npm run dev --prefix backend",
+    "start": "node backend/src/server.js"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-basic-ssl": "^2.3.0",
+    "concurrently": "^8.2.2"
+  }
+}

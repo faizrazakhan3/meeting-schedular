@@ -1,53 +1,55 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import MainLayout from "../layout/Mainlayout";
 
 function Dashboard() {
+  const navigate = useNavigate();
   const user = JSON.parse(
     localStorage.getItem("user") || "{}"
   );
 
-  const[invitations, setInvitations]=
-  useState<any[]>([]);
+  const [invitations, setInvitations] = useState<any[]>([]);
+  // const [notifications, setNotifications] = useState<any[]>([]);
 
-  const [meetings, setMeetings] =
-    useState<any[]>([]);
+  const [meetings, setMeetings] = useState<any[]>([]);
+
 
   useEffect(() => {
     fetchMeetings();
     fetchInvitations();
+    // fetchNotifications();
   }, []);
 
 
   const fetchInvitations =
   async () => {
-
     try {
-
-      const token =
-        localStorage.getItem(
-          "token"
-        );
-
-      const response =
-        await fetch(
-          "http://localhost:5000/api/meetings/invitations",
-          {
-            headers: {
-              Authorization:
-                `Bearer ${token}`,
-            },
-          }
-        );
-
-      const data =
-        await response.json();
-
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        "https://localhost:5000/api/meetings/invitations",
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      const data = await response.json();
       setInvitations(data);
-
     } catch (error) {
       console.error(error);
     }
   };
+
+  // const fetchNotifications =
+  // async () => {
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     const response = await fetch(
+  //       "https://localhost:5000/api/notifications",
+  //       { headers: { Authorization: `Bearer ${token}` } }
+  //     );
+  //     const data = await response.json();
+  //     setNotifications(data);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const fetchMeetings = async () => {
     try {
@@ -55,7 +57,7 @@ function Dashboard() {
         localStorage.getItem("token");
 
       const response = await fetch(
-        "http://localhost:5000/api/meetings",
+        "https://localhost:5000/api/meetings",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -93,7 +95,7 @@ function Dashboard() {
         );
 
       await fetch(
-        `http://localhost:5000/api/meetings/accept/${meetingId}`,
+        `https://localhost:5000/api/meetings/accept/${meetingId}`,
         {
           method: "PUT",
           headers: {
@@ -122,7 +124,7 @@ function Dashboard() {
         );
 
       await fetch(
-        `http://localhost:5000/api/meetings/decline/${meetingId}`,
+        `https://localhost:5000/api/meetings/decline/${meetingId}`,
         {
           method: "PUT",
           headers: {
@@ -309,9 +311,9 @@ function Dashboard() {
 
             <div className="space-y-4">
               {invitations.map(
-                (invite) => (
+                (invite, idx) => (
                   <div
-                    key={invite.id}
+                    key={`invite-${invite.id}-${idx}`}
                     className="
                       bg-[#FCFBF9]
                       border
@@ -338,7 +340,7 @@ function Dashboard() {
                     >
                       📅 {invite.meeting_date}
                       {" • "}
-                      ⏰ {invite.meeting_time}
+                       {invite.meeting_time}
                     </p>
 
                     <p
@@ -469,22 +471,22 @@ function Dashboard() {
             </div>
           ) : (
             <div className="space-y-4">
-              {meetings.map(
-                (meeting) => (
-                  <div
-                    key={meeting.id}
-                    className="
-                      bg-[#FCFBF9]
-                      border
-                      border-[#ECE8E1]
-                      rounded-2xl
-                      p-6
-                      transition-all
-                      duration-300
-                      hover:-translate-y-1
-                      hover:shadow-md
-                    "
-                  >
+      {meetings.map(
+        (meeting, idx) => (
+    <div
+      key={`meeting-${meeting.id}-${idx}`}
+      className="
+                       bg-[#FCFBF9]
+                       border
+                       border-[#ECE8E1]
+                       rounded-2xl
+                       p-6
+                       transition-all
+                       duration-300
+                       hover:-translate-y-1
+                       hover:shadow-md
+                     "
+    >
                     <div
                       className="
                         flex
@@ -523,20 +525,26 @@ function Dashboard() {
                         rounded-xl
                         text-sm
                         font-medium
-                        ${
-                          meeting.status === "accepted"
-                            ? "bg-green-100 text-green-700"
-                            : meeting.status === "pending"
-                            ? "bg-yellow-100 text-yellow-700"
-                            : "bg-red-100 text-red-700"
-                        }
+                      ${
+                        meeting.status === "cancelled"
+                          ? "bg-[#F3EEE7] text-[#8B7355]"
+                          : meeting.attendee_status === "accepted"
+                          ? "bg-green-100 text-green-700"
+                          : meeting.attendee_status === "pending"
+                          ? "bg-yellow-100 text-yellow-700"
+                          : "bg-red-100 text-red-700"
+                      }
                       `}
                     >
-                      {meeting.status === "accepted"
-                        ? "✓ Accepted"
-                        : meeting.status === "pending"
-                        ? "Pending"
-                        : "Declined"}
+                     {
+                        meeting.status === "cancelled"
+                          ? "Cancelled"
+                          : meeting.attendee_status === "accepted"
+                          ? "✓ Accepted"
+                          : meeting.attendee_status === "pending"
+                          ? "Pending"
+                          : "Declined"
+                      }
                     </span>
                     </div>
 
@@ -548,14 +556,25 @@ function Dashboard() {
                       "
                     />
 
-                    <p
-                      className="
-                        text-[#5F5F5F]
-                        leading-relaxed
-                      "
-                    >
-                      {meeting.description}
-                    </p>
+                    <div className="flex justify-between items-center">
+                        <p
+                        className="
+                            text-[#5F5F5F]
+                            leading-relaxed
+                        "
+                        >
+                        {meeting.description}
+                        </p>
+
+                        {meeting.attendee_status === 'accepted' && meeting.status !== 'cancelled' && (
+                            <button
+                                onClick={() => navigate(`/meeting/${meeting.id}`)}
+                                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium transition-colors shadow-sm"
+                            >
+                                Join Video Call
+                            </button>
+                        )}
+                    </div>
                   </div>
                 )
               )}

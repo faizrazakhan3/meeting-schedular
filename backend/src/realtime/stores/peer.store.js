@@ -9,7 +9,6 @@ class Peer {
     constructor(socketId) {
         this.id = socketId;
         
-        // Maps to hold the peer's Transports, Producers, and Consumers
         this.transports = new Map();
         this.producers = new Map();
         this.consumers = new Map();
@@ -29,16 +28,10 @@ class Peer {
         return this.transports.get(id);
     }
 
-    /**
-     * Adds a Producer (sending media to server) to this peer.
-     */
     addProducer(producer) {
         this.producers.set(producer.id, producer);
     }
 
-    /**
-     * Retrieves a Producer by its ID.
-     */
     getProducer(id) {
         return this.producers.get(id);
     }
@@ -50,10 +43,7 @@ class Peer {
         this.consumers.set(consumer.id, consumer);
     }
 
-    /**
-     * Cleans up all resources associated with this peer.
-     * This is crucial to prevent memory leaks and ghost connections.
-     */
+    
     close() {
         console.log(`Closing peer ${this.id}`);
         

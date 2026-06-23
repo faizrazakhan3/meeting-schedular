@@ -25,6 +25,13 @@ const createMeetingService = (
         ),
       ];
 
+      if (end_time <= meeting_time) {
+        return reject({
+          status: 400,
+          message: "End time must be later than start time.",
+        });
+      }
+
       const now = new Date();
 
       const meetingDateTime = new Date(
@@ -35,7 +42,7 @@ const createMeetingService = (
         return reject({
           status: 400,
           message:
-            "Cannot create meetings in the past.",
+            "Cannot schedule meetings in the past.",
         });
       }
 
@@ -94,7 +101,7 @@ const createMeetingService = (
             userId,
             "invite",
             meetingId,
-            `📩 You have been invited in meeting discussuion "${title}" on ${meeting_date} at ${meeting_time}`
+            ` You have been invited in meeting discussuion "${title}" on ${meeting_date} at ${meeting_time}`
           );
         } else {
           // Send notification to the organizer that they successfully scheduled the meeting
@@ -126,18 +133,19 @@ const createMeetingService = (
   });
 };
 
-const getMeetingsService = (
+const getMeetingsService = async (
   userId
 ) => {
-  return MeetingModel.getMeetingsByUserId(
-    userId
-  ).catch(() => {
+  try {
+    return await MeetingModel.getMeetingsByUserId(
+      userId
+    );
+  } catch {
     throw {
       status: 500,
-      message:
-        "Failed to fetch meetings",
+      message: "Failed to fetch meetings",
     };
-  });
+  }
 };
 
 const getUsersService = () => {
@@ -151,7 +159,7 @@ const getUsersService = () => {
   );
 };
 
-const deleteMeetingService = (
+const cancelMeetingService = (
   id
 ) => {
   return new Promise(async (
@@ -159,15 +167,13 @@ const deleteMeetingService = (
     reject
   ) => {
     try {
-      await MeetingModel.deleteMeetingAttendees(
+      await MeetingModel.cancelMeeting(
         id
       );
 
-      await MeetingModel.deleteMeeting(id);
-
       resolve({
         message:
-          "Meeting deleted successfully",
+          "Meeting cancelled successfully",
       });
     } catch (err) {
       reject({
@@ -181,29 +187,82 @@ const deleteMeetingService = (
   });
 };
 
-const updateMeetingService = (
+const updateMeetingService = async (
   id,
   title,
-  description
+  description,
+  meeting_date,
+  meeting_time,
+  end_time
 ) => {
-  return MeetingModel.updateMeeting(
-    id,
-    title,
-    description
-  )
-    .then(() => ({
-      message:
-        "Meeting updated successfully",
-    }))
-    .catch((err) => {
+  try {
+    if (end_time <= meeting_time) {
       throw {
-        status: 500,
-        message:
-          "Failed to update meeting",
-        error:
-          err.message,
+        status: 400,
+        message: "End time must be later than start time.",
       };
-    });
+    }
+
+    const now = new Date();
+    const meetingDateTime = new Date(
+      `${meeting_date}T${meeting_time}`
+    );
+
+    if (meetingDateTime < now) {
+      throw {
+        status: 400,
+        message: "Cannot schedule meetings in the past.",
+      };
+    }
+
+    const participants = await MeetingModel.getAttendeeIds(id);
+
+    const existingMeetings =
+      await MeetingModel.checkConflicts(
+        meeting_date,
+        participants
+      );
+
+    const hasConflict =
+      existingMeetings.some(
+        (meeting) =>
+          meeting.id !== Number(id) &&
+          meeting_time <
+            meeting.end_time &&
+          end_time >
+            meeting.meeting_time
+      );
+
+    if (hasConflict) {
+      throw {
+        status: 409,
+        message:
+          "One or more participants already have a meeting during this time.",
+      };
+    }
+
+    await MeetingModel.updateMeeting(
+      id,
+      title,
+      description,
+      meeting_date,
+      meeting_time,
+      end_time
+    );
+
+    return {
+      message: "Meeting updated successfully",
+    };
+  } catch (err) {
+    if (err.status) {
+      throw err;
+    }
+    throw {
+      status: 500,
+      message: "Failed to update meeting",
+      error: err.message,
+    };
+  }
 };
 
 const checkAvailabilityService = (
@@ -340,7 +399,7 @@ module.exports = {
   createMeetingService,
   getMeetingsService,
   getUsersService,
-  deleteMeetingService,
+  cancelMeetingService,
   updateMeetingService,
   checkAvailabilityService,
   getInvitationsService,
