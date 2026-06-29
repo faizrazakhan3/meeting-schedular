@@ -33,7 +33,7 @@ function Register() {
     }
 
     const response = await fetch(
-      "https://localhost:5000/api/auth/register",
+      "https://172.20.10.2:5000/api/auth/register",
       {
         method: "POST",
         headers: {

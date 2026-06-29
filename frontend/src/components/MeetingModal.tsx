@@ -95,7 +95,7 @@ function MeetingModal({
 
         const response =
           await fetch(
-            `https://localhost:5000/api/meetings/${meetingId}/participants`,
+            `https://172.20.10.2:5000/api/meetings/${meetingId}/participants`,
             {
               headers: {
                 Authorization:
@@ -154,8 +154,8 @@ function MeetingModal({
 
       const response = await fetch(
         selectedMeeting
-          ? `https://localhost:5000/api/meetings/${selectedMeeting.id}`
-          : "https://localhost:5000/api/meetings",
+          ? `https://172.20.10.2:5000/api/meetings/${selectedMeeting.id}`
+          : "https://172.20.10.2:5000/api/meetings",
         {
           method: selectedMeeting
             ? "PUT"
@@ -222,7 +222,7 @@ function MeetingModal({
       const token = sessionStorage.getItem("token");
 
       const response = await fetch(
-        `https://localhost:5000/api/meetings/${selectedMeeting.id}/cancel`,
+        `https://172.20.10.2:5000/api/meetings/${selectedMeeting.id}/cancel`,
         {
           method: "PATCH",
           headers: {
@@ -271,7 +271,7 @@ function MeetingModal({
 
       const response =
         await fetch(
-          `https://localhost:5000/api/meetings/search-users?search=${value}`,
+          `https://172.20.10.2:5000/api/meetings/search-users?search=${value}`,
           {
             headers: {
               Authorization:

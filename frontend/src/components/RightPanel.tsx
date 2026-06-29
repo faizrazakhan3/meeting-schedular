@@ -93,7 +93,7 @@ function RightPanel() {
       try {
         const token = sessionStorage.getItem("token");
         if (!token) return;
-        const res = await fetch("https://localhost:5000/api/meetings", {
+        const res = await fetch("https://172.20.10.2:5000/api/meetings", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) return;

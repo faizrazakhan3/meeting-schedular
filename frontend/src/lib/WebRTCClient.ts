@@ -40,7 +40,7 @@ export class WebRTCClient {
         
         // Connect to Socket.IO backend
         // We use https and wss because of the basicSsl setup
-        this.socket = io('https://localhost:5000', {
+        this.socket = io('https://172.20.10.2:5000', {
             transports: ['websocket', 'polling'],
             secure: true,
         });

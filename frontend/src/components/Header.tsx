@@ -42,7 +42,7 @@ function Header({ toggleSidebar }: HeaderProps) {
     try {
       const token = sessionStorage.getItem("token");
       if (!token) return;
-      const res = await fetch("https://localhost:5000/api/notifications", {
+      const res = await fetch("https://172.20.10.2:5000/api/notifications", {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) return;
@@ -66,7 +66,7 @@ function Header({ toggleSidebar }: HeaderProps) {
     if (!dropdownOpen && unreadCount > 0) {
       try {
         const token = sessionStorage.getItem("token");
-        await fetch("https://localhost:5000/api/notifications/read", {
+        await fetch("https://172.20.10.2:5000/api/notifications/read", {
           method: "PATCH",
           headers: { Authorization: `Bearer ${token}` },
         });

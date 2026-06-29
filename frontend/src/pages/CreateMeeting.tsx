@@ -35,7 +35,7 @@ const [selectedTime, setSelectedTime] =
       sessionStorage.getItem("token");
 
     const response = await fetch(
-      "https://localhost:5000/api/meetings",
+      "https://172.20.10.2:5000/api/meetings",
       {
         headers: {
           Authorization:

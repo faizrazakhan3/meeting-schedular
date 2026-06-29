@@ -326,7 +326,7 @@ function Dashboard() {
     try {
       const token = sessionStorage.getItem("token");
       const response = await fetch(
-        "https://localhost:5000/api/meetings/invitations",
+        "https://172.20.10.2:5000/api/meetings/invitations",
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const data = await response.json();
@@ -340,7 +340,7 @@ function Dashboard() {
     try {
       const token = sessionStorage.getItem("token");
       const response = await fetch(
-        "https://localhost:5000/api/meetings",
+        "https://172.20.10.2:5000/api/meetings",
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const data = await response.json();
@@ -354,7 +354,7 @@ function Dashboard() {
     try {
       const token = sessionStorage.getItem("token");
       await fetch(
-        `https://localhost:5000/api/meetings/${action}/${meetingId}`,
+        `https://172.20.10.2:5000/api/meetings/${action}/${meetingId}`,
         {
           method: "PUT",
           headers: { Authorization: `Bearer ${token}` },
