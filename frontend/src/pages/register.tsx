@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link,useNavigate } from "react-router-dom";
 import { styles } from "../theme/styles";
-import bgImage from "../assests/images.jpg";
 import toast from "react-hot-toast";
 
 function Register() {
@@ -57,13 +56,7 @@ function Register() {
   };
 
   return (
-    <div
-      className="min-h-screen bg-cover bg-center"
-      style={{
-        backgroundImage: `url(${bgImage})`,
-      }}
-    >
-      <div className="min-h-screen bg-black/50 flex flex-col items-center justify-center px-4 py-6">
+    <div className="min-h-screen bg-app-bg flex flex-col items-center justify-center px-4 py-6">
 
         <h1 className={`${styles.title} mb-10`}>
           Meeting Organizer
@@ -114,7 +107,6 @@ function Register() {
         </div>
 
       </div>
-    </div>
   );
 }
 

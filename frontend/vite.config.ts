@@ -12,6 +12,12 @@ export default defineConfig({
     tailwindcss(),
     react()
   ],
+   build: {
+    chunkSizeWarningLimit: 1000,
+  },
+  optimizeDeps: {
+    include: ['temporal-polyfill'],
+  },
   server: {
     https: {
       key: fs.readFileSync(keyPath),

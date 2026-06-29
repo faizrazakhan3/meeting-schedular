@@ -1,10 +1,12 @@
 @theme {
 
   /* Colors */
-  --color-primary: #2563eb;
+  --color-primary: #4F46E5;
   --color-secondary: #64748b;
   --color-success: #22c55e;
   --color-danger: #ef4444;
+  --color-app-bg: #F5F5F7;
+  --color-card-bg: #FFFFFF;
 
   /* Breakpoints */
   --breakpoint-mobile: 480px;
@@ -18,5 +20,5 @@
   --radius-lg: 20px;
 
   /* Font */
-  --font-primary: Inter, sans-serif; 
+  --font-primary: Inter, system-ui, sans-serif;
 }

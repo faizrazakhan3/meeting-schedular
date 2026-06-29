@@ -91,7 +91,7 @@ function MeetingModal({
       try {
 
         const token =
-          localStorage.getItem("token");
+          sessionStorage.getItem("token");
 
         const response =
           await fetch(
@@ -150,7 +150,7 @@ function MeetingModal({
   const handleSave = async () => {
     try {
       const token =
-        localStorage.getItem("token");
+        sessionStorage.getItem("token");
 
       const response = await fetch(
         selectedMeeting
@@ -219,7 +219,7 @@ function MeetingModal({
 
   const handleCancel = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
 
       const response = await fetch(
         `https://localhost:5000/api/meetings/${selectedMeeting.id}/cancel`,
@@ -267,7 +267,7 @@ function MeetingModal({
     try {
 
       const token =
-        localStorage.getItem("token");
+        sessionStorage.getItem("token");
 
       const response =
         await fetch(
@@ -318,7 +318,7 @@ function MeetingModal({
           bg-white
           w-full
           max-w-6xl
-          max-h-[90vh]
+          h-auto
           rounded-2xl
           shadow-2xl
           overflow-hidden

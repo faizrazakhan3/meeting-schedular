@@ -32,7 +32,7 @@ const [selectedTime, setSelectedTime] =
   const fetchMeetings = async () => {
   try {
     const token =
-      localStorage.getItem("token");
+      sessionStorage.getItem("token");
 
     const response = await fetch(
       "https://localhost:5000/api/meetings",
@@ -213,7 +213,6 @@ const [selectedTime, setSelectedTime] =
     setShowModal(true);
   }}
 />
-
           </div>
 
         </div>

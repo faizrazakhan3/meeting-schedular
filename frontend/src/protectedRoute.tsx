@@ -5,7 +5,7 @@ interface protectedRouteProps {
   children: ReactNode;
 }
 function protectedRoute({children}:protectedRouteProps){
-    const token=localStorage.getItem("token");
+    const token=sessionStorage.getItem("token");
     if(!token){
         return <Navigate to ="/login" replace/>
     }

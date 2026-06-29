@@ -13,6 +13,11 @@ export const VideoTile: React.FC<VideoTileProps> = ({ stream, isLocal = false, n
     useEffect(() => {
         if (videoRef.current && stream) {
             videoRef.current.srcObject = stream;
+            videoRef.current.play().catch(err => {
+                if (err.name !== 'AbortError') {
+                    console.error("Error playing video stream:", err);
+                }
+            });
         }
     }, [stream]);
 

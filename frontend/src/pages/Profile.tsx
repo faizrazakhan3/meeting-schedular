@@ -2,7 +2,7 @@ import MainLayout from "../layout/Mainlayout";
 
 function Profile() {
   const user = JSON.parse(
-    localStorage.getItem("user") || "{}"
+    sessionStorage.getItem("user") || "{}"
   );
 
   const initials =

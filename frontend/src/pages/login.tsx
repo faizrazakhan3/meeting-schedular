@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { styles } from "../theme/styles";
-import bgImage from "../assests/images.jpg";
 import toast from "react-hot-toast";
 function Login() {
   const [email, setEmail] = useState("");
@@ -38,12 +37,12 @@ function Login() {
     const data = await response.json();
 
    if (data.token) {
-  localStorage.setItem(
+  sessionStorage.setItem(
     "token",
     data.token
   );
 
-  localStorage.setItem(
+  sessionStorage.setItem(
     "user",
     JSON.stringify(data.user)
   );
@@ -58,13 +57,7 @@ function Login() {
   };
 
   return (
-    <div
-      className="min-h-screen bg-cover bg-center"
-      style={{
-        backgroundImage: `url(${bgImage})`,
-      }}
-    >
-      <div className="min-h-screen bg-black/50 flex flex-col items-center justify-center px-4 py-6">
+    <div className="min-h-screen bg-app-bg flex flex-col items-center justify-center px-4 py-6">
 
         <h1 className={`${styles.title} mb-10`}>
           Meeting Organizer
@@ -116,7 +109,6 @@ function Login() {
         </div>
 
       </div>
-    </div>
   );
 }
 

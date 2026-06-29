@@ -14,6 +14,11 @@
     "@fullcalendar/interaction": "^6.1.20",
     "@fullcalendar/react": "^6.1.20",
     "@fullcalendar/timegrid": "^6.1.20",
+    "@schedule-x/calendar": "^4.6.0",
+    "@schedule-x/drag-and-drop": "^3.7.3",
+    "@schedule-x/events-service": "^4.6.0",
+    "@schedule-x/react": "^4.1.0",
+    "@schedule-x/theme-default": "^4.6.0",
     "@tailwindcss/vite": "^4.3.0",
     "axios": "^1.16.1",
     "bcryptjs": "^3.0.3",
@@ -33,7 +38,8 @@
     "react-router-dom": "^7.16.0",
     "socket.io-client": "^4.8.3",
     "tailwind-scrollbar-hide": "^4.0.0",
-    "tailwindcss": "^4.3.0"
+    "tailwindcss": "^4.3.0",
+    "temporal-polyfill": "^0.3.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
