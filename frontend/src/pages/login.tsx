@@ -21,7 +21,7 @@ function Login() {
     }
 
     const response = await fetch(
-      "https://172.20.10.2:5000/api/auth/login",
+      "https://10.200.32.63:5000/api/auth/login",
       {
         method: "POST",
         headers: {
@@ -36,22 +36,22 @@ function Login() {
 
     const data = await response.json();
 
-   if (data.token) {
-  sessionStorage.setItem(
-    "token",
-    data.token
-  );
+    if (data.token) {
+      sessionStorage.setItem(
+        "token",
+        data.token
+      );
 
-  sessionStorage.setItem(
-    "user",
-    JSON.stringify(data.user)
-  );
+      sessionStorage.setItem(
+        "user",
+        JSON.stringify(data.user)
+      );
 
-  toast.success("Login Success");
+      toast.success("Login Success");
 
-  navigate("/dashboard");
-  return;
-}
+      navigate("/dashboard");
+      return;
+    }
 
     toast.error(data.message);
   };
@@ -59,56 +59,56 @@ function Login() {
   return (
     <div className="min-h-screen bg-app-bg flex flex-col items-center justify-center px-4 py-6">
 
-        <h1 className={`${styles.title} mb-10`}>
-          Meeting Organizer
-        </h1>
+      <h1 className={`${styles.title} mb-10`}>
+        Meeting Organizer
+      </h1>
 
-        <div className={styles.card}>
+      <div className={styles.card}>
 
-          <p className={styles.subtitle}>
-            Login to continue
-          </p>
+        <p className={styles.subtitle}>
+          Login to continue
+        </p>
 
-          <input
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            placeholder="Enter Email"
-            className={styles.input}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+        <input
+          id="email"
+          name="email"
+          type="email"
+          autoComplete="email"
+          placeholder="Enter Email"
+          className={styles.input}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            placeholder="Enter Password"
-            className={styles.input}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autoComplete="current-password"
+          placeholder="Enter Password"
+          className={styles.input}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-          <button
-            onClick={handleLogin}
-            className={styles.button}
+        <button
+          onClick={handleLogin}
+          className={styles.button}
+        >
+          Login
+        </button>
+
+        <p className="text-center mt-4 text-lg">
+          Don't have an account?{" "}
+          <Link
+            to="/register"
+            className={styles.link}
           >
-            Login
-          </button>
-
-          <p className="text-center mt-4 text-lg">
-            Don't have an account?{" "}
-            <Link
-              to="/register"
-              className={styles.link}
-            >
-              Register
-            </Link>
-          </p>
-
-        </div>
+            Register
+          </Link>
+        </p>
 
       </div>
+
+    </div>
   );
 }
 

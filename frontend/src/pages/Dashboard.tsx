@@ -247,7 +247,7 @@ function MeetingCard({
           );
         })}
         {!showAllAttendees && attendeesList.length > 3 && (
-          <div 
+          <div
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -259,7 +259,7 @@ function MeetingCard({
           </div>
         )}
         {showAllAttendees && attendeesList.length > 3 && (
-          <div 
+          <div
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -288,17 +288,16 @@ function MeetingCard({
             </>
           ) : (
             <>
-               <span className={`text-[11px] font-semibold px-2 py-1 rounded-md ${
-                 isCancelled ? "text-red-500 bg-red-50" : 
-                 status === "pending" ? "text-amber-500 bg-amber-50" : 
-                 status === "completed" ? "text-purple-600 bg-purple-50" :
-                 "text-[#4F46E5] bg-indigo-50/50"
-               }`}>
-                 {isCancelled ? "Cancelled" : (status === "pending" ? "Pending" : countdownText)}
-               </span>
-               <button onClick={onJoin ? () => onJoin(meeting.id) : undefined} className="text-[#4F46E5] text-[11px] font-bold hover:text-indigo-800 transition-colors cursor-pointer outline-none border-none bg-transparent">
-                 Video call
-               </button>
+              <span className={`text-[11px] font-semibold px-2 py-1 rounded-md ${isCancelled ? "text-red-500 bg-red-50" :
+                  status === "pending" ? "text-amber-500 bg-amber-50" :
+                    status === "completed" ? "text-purple-600 bg-purple-50" :
+                      "text-[#4F46E5] bg-indigo-50/50"
+                }`}>
+                {isCancelled ? "Cancelled" : (status === "pending" ? "Pending" : countdownText)}
+              </span>
+              <button onClick={onJoin ? () => onJoin(meeting.id) : undefined} className="text-[#4F46E5] text-[11px] font-bold hover:text-indigo-800 transition-colors cursor-pointer outline-none border-none bg-transparent">
+                Video call
+              </button>
             </>
           )}
         </div>
@@ -326,7 +325,7 @@ function Dashboard() {
     try {
       const token = sessionStorage.getItem("token");
       const response = await fetch(
-        "https://172.20.10.2:5000/api/meetings/invitations",
+        "https://10.200.32.63:5000/api/meetings/invitations",
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const data = await response.json();
@@ -340,7 +339,7 @@ function Dashboard() {
     try {
       const token = sessionStorage.getItem("token");
       const response = await fetch(
-        "https://172.20.10.2:5000/api/meetings",
+        "https://10.200.32.63:5000/api/meetings",
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const data = await response.json();
@@ -354,7 +353,7 @@ function Dashboard() {
     try {
       const token = sessionStorage.getItem("token");
       await fetch(
-        `https://172.20.10.2:5000/api/meetings/${action}/${meetingId}`,
+        `https://10.200.32.63:5000/api/meetings/${action}/${meetingId}`,
         {
           method: "PUT",
           headers: { Authorization: `Bearer ${token}` },
@@ -428,28 +427,28 @@ function Dashboard() {
             value={totalCount}
             icon={<Calendar size={20} className="text-[#4F46E5]" />}
             iconBg="bg-indigo-50"
-            // trend={12}
+          // trend={12}
           />
           <StatsCard
             title="Scheduled Meetings"
             value={scheduledCount}
             icon={<Calendar size={20} className="text-[#3b82f6]" />}
             iconBg="bg-blue-50"
-            // trend={8}
+          // trend={8}
           />
           <StatsCard
             title="Completed"
             value={completedCount}
             icon={<CheckCircle2 size={20} className="text-emerald-500" />}
             iconBg="bg-emerald-50"
-            // trend={15}
+          // trend={15}
           />
           <StatsCard
             title="Cancelled"
             value={cancelledCount}
             icon={<Clock size={20} className="text-orange-500" />}
             iconBg="bg-orange-50"
-            // trend={-2}
+          // trend={-2}
           />
         </div>
 

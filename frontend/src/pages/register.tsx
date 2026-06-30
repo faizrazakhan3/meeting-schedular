@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { styles } from "../theme/styles";
 import toast from "react-hot-toast";
 
@@ -33,7 +33,7 @@ function Register() {
     }
 
     const response = await fetch(
-      "https://172.20.10.2:5000/api/auth/register",
+      "https://10.200.32.63:5000/api/auth/register",
       {
         method: "POST",
         headers: {
@@ -50,7 +50,7 @@ function Register() {
     const data = await response.json();
 
     toast.success(data.message);
-    if(response.ok){
+    if (response.ok) {
       navigate("/login");
     }
   };
@@ -58,55 +58,55 @@ function Register() {
   return (
     <div className="min-h-screen bg-app-bg flex flex-col items-center justify-center px-4 py-6">
 
-        <h1 className={`${styles.title} mb-10`}>
-          Meeting Organizer
-        </h1>
+      <h1 className={`${styles.title} mb-10`}>
+        Meeting Organizer
+      </h1>
 
-        <div className={styles.card}>
-          <p className={styles.subtitle}>
-            Create Account
-          </p>
+      <div className={styles.card}>
+        <p className={styles.subtitle}>
+          Create Account
+        </p>
 
-          <input
-            type="text"
-            placeholder="Enter Name"
-            className={styles.input}
-            onChange={(e) => setName(e.target.value)}
-          />
+        <input
+          type="text"
+          placeholder="Enter Name"
+          className={styles.input}
+          onChange={(e) => setName(e.target.value)}
+        />
 
-          <input
-            type="email"
-            placeholder="Enter Email"
-            className={styles.input}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+        <input
+          type="email"
+          placeholder="Enter Email"
+          className={styles.input}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-          <input
-            type="password"
-            placeholder="Enter Password"
-            className={styles.input}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+        <input
+          type="password"
+          placeholder="Enter Password"
+          className={styles.input}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-          <button
-            onClick={handleRegister}
-            className={styles.button}
+        <button
+          onClick={handleRegister}
+          className={styles.button}
+        >
+          Register
+        </button>
+
+        <p className="text-center mt-4 text-lg">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className={styles.link}
           >
-            Register
-          </button>
-
-          <p className="text-center mt-4 text-lg">
-            Already have an account?{" "}
-            <Link
-              to="/login"
-              className={styles.link}
-            >
-              Login
-            </Link>
-          </p>
-        </div>
-
+            Login
+          </Link>
+        </p>
       </div>
+
+    </div>
   );
 }
 

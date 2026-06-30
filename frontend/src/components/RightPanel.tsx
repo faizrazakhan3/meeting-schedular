@@ -93,7 +93,7 @@ function RightPanel() {
       try {
         const token = sessionStorage.getItem("token");
         if (!token) return;
-        const res = await fetch("https://172.20.10.2:5000/api/meetings", {
+        const res = await fetch("https://10.200.32.63:5000/api/meetings", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!res.ok) return;
@@ -190,7 +190,7 @@ function RightPanel() {
                         </div>
                       ))}
                       {!expandedMeetings[m.id] && avatars.length > 3 && (
-                        <div 
+                        <div
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
@@ -202,7 +202,7 @@ function RightPanel() {
                         </div>
                       )}
                       {expandedMeetings[m.id] && avatars.length > 3 && (
-                        <div 
+                        <div
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();

@@ -5,7 +5,7 @@ import fs from 'fs'
 import path from 'path'
 
 const certPath = path.resolve(__dirname, '../backend/cert.pem')
-const keyPath = path.resolve(__dirname, '../backend/key.pem')
+const keyPath = path.resolve(__dirname, '../backend/key.pem') 
 
 export default defineConfig({
   plugins: [

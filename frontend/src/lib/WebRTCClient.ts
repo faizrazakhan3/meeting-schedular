@@ -11,15 +11,15 @@ export interface RemoteStream {
 }
 
 export class WebRTCClient {
-  // Callback that UI can register to receive join notifications with actual names
-  private onUserJoined?: (peerId: string, name: string) => void;
+    // Callback that UI can register to receive join notifications with actual names
+    private onUserJoined?: (peerId: string, name: string) => void;
 
-  /**
-   * Register a handler for the `userJoined` socket event.
-   */
-  public setUserJoinedHandler(cb: (peerId: string, name: string) => void) {
-    this.onUserJoined = cb;
-  }
+    /**
+     * Register a handler for the `userJoined` socket event.
+     */
+    public setUserJoinedHandler(cb: (peerId: string, name: string) => void) {
+        this.onUserJoined = cb;
+    }
     private socket: Socket;
     private device: Device | null = null;
     private sendTransport: Transport | null = null;
@@ -30,17 +30,17 @@ export class WebRTCClient {
 
     public localStream: MediaStream | null = null;
     public remoteStreams: Map<string, RemoteStream> = new Map();
-    
+
     private roomId: string;
     private onRemoteStreamsChange: () => void;
 
     constructor(roomId: string, onRemoteStreamsChange: () => void) {
         this.roomId = roomId;
         this.onRemoteStreamsChange = onRemoteStreamsChange;
-        
+
         // Connect to Socket.IO backend
         // We use https and wss because of the basicSsl setup
-        this.socket = io('https://172.20.10.2:5000', {
+        this.socket = io('https://10.200.32.63:5000', {
             transports: ['websocket', 'polling'],
             secure: true,
         });
@@ -117,25 +117,25 @@ export class WebRTCClient {
         const storedUser = sessionStorage.getItem('user');
         const user = storedUser ? JSON.parse(storedUser) : {};
         const name = user.name || 'Anonymous';
-+
-        this.socket.emit('joinRoom', { roomId: this.roomId, name }, async (response: any) => {
-            if (response.error) {
-                console.error('Failed to join room:', response.error);
-                return;
-            }
-            console.log('Joined room, RTP capabilities received');
-            
-            // Register names of peers already in the room
-            if (response.peers && Array.isArray(response.peers)) {
-                response.peers.forEach((peer: any) => {
-                    if (peer.peerId && peer.name && this.onUserJoined) {
-                        this.onUserJoined(peer.peerId, peer.name);
-                    }
-                });
-            }
+        +
+            this.socket.emit('joinRoom', { roomId: this.roomId, name }, async (response: any) => {
+                if (response.error) {
+                    console.error('Failed to join room:', response.error);
+                    return;
+                }
+                console.log('Joined room, RTP capabilities received');
 
-            await this.initializeDevice(response.routerRtpCapabilities);
-        });
+                // Register names of peers already in the room
+                if (response.peers && Array.isArray(response.peers)) {
+                    response.peers.forEach((peer: any) => {
+                        if (peer.peerId && peer.name && this.onUserJoined) {
+                            this.onUserJoined(peer.peerId, peer.name);
+                        }
+                    });
+                }
+
+                await this.initializeDevice(response.routerRtpCapabilities);
+            });
     }
 
     private async initializeDevice(routerRtpCapabilities: any) {
@@ -143,10 +143,10 @@ export class WebRTCClient {
             this.device = new Device();
             await this.device.load({ routerRtpCapabilities });
             console.log('Mediasoup device loaded');
-            
+
             await this.createSendTransport();
             await this.createReceiveTransport();
-            
+
             // Get already existing producers in the room
             this.socket.emit('getProducers', {}, (producers: any) => {
                 if (producers && !producers.error) {
@@ -296,7 +296,7 @@ export class WebRTCClient {
                 ctx.textAlign = 'center';
                 ctx.fillText('Camera Disabled/Unavailable', canvas.width / 2, canvas.height / 2);
             }
-            
+
             const videoStream = (canvas as any).captureStream ? (canvas as any).captureStream(1) : null;
             const dummyVideoTrack = videoStream ? videoStream.getVideoTracks()[0] : null;
 
@@ -343,7 +343,7 @@ export class WebRTCClient {
                     this.audioProducer = await this.sendTransport.produce({ track: audioTrack });
                 }
             }
-            
+
             // Trigger re-render for local video
             this.onRemoteStreamsChange();
             return this.localStream;
@@ -359,7 +359,7 @@ export class WebRTCClient {
         }
         if (this.videoProducer) this.videoProducer.close();
         if (this.audioProducer) this.audioProducer.close();
-        
+
         this.localStream = null;
         this.onRemoteStreamsChange();
     }
@@ -391,7 +391,7 @@ export class WebRTCClient {
                 this.consumers.set(producerId, consumer);
 
                 // Important: We must tell the server to resume the consumer
-                this.socket.emit('resumeConsumer', { consumerId: consumer.id }, () => {});
+                this.socket.emit('resumeConsumer', { consumerId: consumer.id }, () => { });
 
                 // Group by peerId and create a new MediaStream instance to trigger React re-render
                 const existingRemote = this.remoteStreams.get(peerId);

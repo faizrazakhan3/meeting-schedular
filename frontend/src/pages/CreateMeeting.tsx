@@ -16,43 +16,43 @@ function CreateMeeting() {
     useState([]);
 
   const [selectedDate, setSelectedDate] =
-  useState("");
+    useState("");
 
-const [selectedTime, setSelectedTime] =
-  useState("");
+  const [selectedTime, setSelectedTime] =
+    useState("");
 
   const [currentDate, setCurrentDate] =
     useState(new Date());
 
 
-  const [selectedMeeting, setselectedMeeting]=
-  useState<any>(null);
+  const [selectedMeeting, setselectedMeeting] =
+    useState<any>(null);
 
 
   const fetchMeetings = async () => {
-  try {
-    const token =
-      sessionStorage.getItem("token");
+    try {
+      const token =
+        sessionStorage.getItem("token");
 
-    const response = await fetch(
-      "https://172.20.10.2:5000/api/meetings",
-      {
-        headers: {
-          Authorization:
-            `Bearer ${token}`,
-        },
-      }
-    );
+      const response = await fetch(
+        "https://10.200.32.63:5000/api/meetings",
+        {
+          headers: {
+            Authorization:
+              `Bearer ${token}`,
+          },
+        }
+      );
 
-    const data =
-      await response.json();
+      const data =
+        await response.json();
 
-    setMeetings(data);
-    console.log(meetings,data);
-  } catch (error) {
-    console.error(error);
-  }
-};
+      setMeetings(data);
+      console.log(meetings, data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     fetchMeetings();
@@ -87,8 +87,8 @@ const [selectedTime, setSelectedTime] =
 
     start.setDate(
       currentDate.getDate() -
-        currentDate.getDay() +
-        1
+      currentDate.getDay() +
+      1
     );
 
     const end = new Date(start);
@@ -110,9 +110,8 @@ const [selectedTime, setSelectedTime] =
       "December",
     ];
 
-    return `${start.getDate()}-${end.getDate()} ${
-      monthNames[end.getMonth()]
-    }, ${end.getFullYear()}`;
+    return `${start.getDate()}-${end.getDate()} ${monthNames[end.getMonth()]
+      }, ${end.getFullYear()}`;
   };
 
   return (
@@ -193,46 +192,46 @@ const [selectedTime, setSelectedTime] =
               </div>
             </div>
 
-        <WeekGrid
-  meetings={meetings}
-  onCellClick={(date, time) => {
-    setselectedMeeting(null);
-    setSelectedDate(date);
-    setSelectedTime(time);
-    setShowModal(true);
-  }}
-  onMeetingClick={(meeting) => {
-    setselectedMeeting(meeting);
-    setSelectedDate(
-      meeting.meeting_date
-    );
-   setSelectedDate(
-  meeting.meeting_date
-    .split("T")[0]
-);
-    setShowModal(true);
-  }}
-/>
+            <WeekGrid
+              meetings={meetings}
+              onCellClick={(date, time) => {
+                setselectedMeeting(null);
+                setSelectedDate(date);
+                setSelectedTime(time);
+                setShowModal(true);
+              }}
+              onMeetingClick={(meeting) => {
+                setselectedMeeting(meeting);
+                setSelectedDate(
+                  meeting.meeting_date
+                );
+                setSelectedDate(
+                  meeting.meeting_date
+                    .split("T")[0]
+                );
+                setShowModal(true);
+              }}
+            />
           </div>
 
         </div>
 
       </div>
 
-     {showModal && (
-  <MeetingModal
-  date={selectedDate}
-  time={selectedTime}
-  selectedMeeting={
-    selectedMeeting
-  }
-  fetchMeetings={fetchMeetings}
-  onClose={() => {
-    setShowModal(false);
-    setselectedMeeting(null);
-  }}
-/>
-)}
+      {showModal && (
+        <MeetingModal
+          date={selectedDate}
+          time={selectedTime}
+          selectedMeeting={
+            selectedMeeting
+          }
+          fetchMeetings={fetchMeetings}
+          onClose={() => {
+            setShowModal(false);
+            setselectedMeeting(null);
+          }}
+        />
+      )}
     </MainLayout>
   );
 }
