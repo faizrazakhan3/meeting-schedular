@@ -289,9 +289,9 @@ function MeetingCard({
           ) : (
             <>
               <span className={`text-[11px] font-semibold px-2 py-1 rounded-md ${isCancelled ? "text-red-500 bg-red-50" :
-                  status === "pending" ? "text-amber-500 bg-amber-50" :
-                    status === "completed" ? "text-purple-600 bg-purple-50" :
-                      "text-[#4F46E5] bg-indigo-50/50"
+                status === "pending" ? "text-amber-500 bg-amber-50" :
+                  status === "completed" ? "text-purple-600 bg-purple-50" :
+                    "text-[#4F46E5] bg-indigo-50/50"
                 }`}>
                 {isCancelled ? "Cancelled" : (status === "pending" ? "Pending" : countdownText)}
               </span>

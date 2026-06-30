@@ -139,9 +139,20 @@ function Header({ toggleSidebar }: HeaderProps) {
               type="text"
               placeholder="Search meetings, people..."
               className="w-full pl-9 pr-16 py-2 text-sm text-slate-700 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 placeholder:text-slate-400 transition-all duration-200"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  const query = e.currentTarget.value.toLowerCase().trim();
+                  if (query === "profile") {
+                    navigate("/profile");
+                  } else if (query === "create meeting") {
+                    navigate("/create-meeting");
+                  }
+                  e.currentTarget.value = "";
+                }
+              }}
             />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400 bg-white border border-slate-200 rounded-md px-1.5 py-0.5 pointer-events-none">
-              ⌘K
+              search
             </span>
           </div>
         </div>
@@ -218,9 +229,8 @@ function Header({ toggleSidebar }: HeaderProps) {
                 notifications.map((notif) => (
                   <div
                     key={notif.id}
-                    className={`flex gap-3 px-4 py-3.5 border-b border-slate-100 transition-colors duration-150 ${
-                      notif.is_read === 0 ? "bg-amber-50/40" : "bg-white"
-                    } hover:bg-slate-50`}
+                    className={`flex gap-3 px-4 py-3.5 border-b border-slate-100 transition-colors duration-150 ${notif.is_read === 0 ? "bg-amber-50/40" : "bg-white"
+                      } hover:bg-slate-50`}
                   >
                     <span className="text-lg mt-0.5 shrink-0">
                       {notif.type === "invite" ? "📩" : "⏰"}

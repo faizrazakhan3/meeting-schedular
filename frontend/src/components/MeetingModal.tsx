@@ -148,6 +148,14 @@ function MeetingModal({
   const [meetingEndTime, setMeetingEndTime] = useState(selectedMeeting?.end_time || getEndTime(meetingTime));
 
   const handleSave = async () => {
+     if (!title.trim()) {
+      toast.error("Meeting title is required.");
+      return;
+    }
+    if(selectedUsers.length===0){
+      toast.error("Please invite atleast one attendee");
+      return;
+    }
     try {
       const token =
         sessionStorage.getItem("token");
