@@ -54,7 +54,20 @@ const MeetingRoom: React.FC = () => {
   };
 
   const totalParticipants = remoteStreams.length + 1; // +1 for local
-  const gridClass = totalParticipants <= 12 ? '' : 'grid-cols-4';
+
+  // Calculate dynamic grid columns and rows like MS Teams (Gallery View)
+  const calculateGrid = (count: number) => {
+    if (count === 1) return { cols: 1, rows: 1 };
+    if (count === 2) return { cols: 2, rows: 1 };
+    if (count <= 4) return { cols: 2, rows: 2 };
+    if (count <= 6) return { cols: 3, rows: 2 };
+    if (count <= 9) return { cols: 3, rows: 3 };
+    if (count <= 12) return { cols: 4, rows: 3 };
+    if (count <= 16) return { cols: 4, rows: 4 };
+    return { cols: 5, rows: Math.ceil(count / 5) };
+  };
+
+  const { cols, rows } = calculateGrid(totalParticipants);
 
   return (
     <div className="h-screen w-full bg-slate-950 flex flex-col font-sans overflow-hidden">
@@ -80,19 +93,22 @@ const MeetingRoom: React.FC = () => {
 
 
       {/* Video Grid Area */}
-      <div className="flex-1 p-6 relative overflow-auto flex items-center justify-center">
+      <div className="flex-1 p-4 md:p-6 relative overflow-hidden flex items-center justify-center bg-slate-950">
         <div
-          className={`w-full h-full max-w-7xl max-h-[80vh] grid ${gridClass} gap-4 auto-rows-fr`}
-          style={totalParticipants <= 12 ? { gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' } : {}}
+          className="w-full h-full max-w-[1600px] grid gap-4 transition-all duration-500 ease-in-out"
+          style={{ 
+            gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+            gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`
+          }}
         >
           {/* Local User */}
-          <div className="w-full h-full min-h-[200px]">
+          <div className="relative w-full h-full min-h-0 min-w-0 transition-all duration-500">
             <VideoTile stream={localStream} isLocal={true} name="You" />
           </div>
 
           {/* Remote Users */}
           {remoteStreams.map(remote => (
-            <div key={remote.peerId} className="w-full h-full min-h-[200px]">
+            <div key={remote.peerId} className="relative w-full h-full min-h-0 min-w-0 transition-all duration-500">
                <VideoTile stream={remote.stream} isLocal={false} name={peerNames.get(remote.peerId) || remote.peerId} />
             </div>
           ))}
