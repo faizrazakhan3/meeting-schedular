@@ -1,24 +1,21 @@
 export const styles = {
  card:
-"bg-white/95 backdrop-blur-sm shadow-xl rounded-xl w-full max-w-2xl px-10 py-8",
+"bg-white/95 backdrop-blur-sm shadow-xl rounded-xl w-full max-w-md px-8 py-8",
 
   title:
-    "text-3xl md:text-5xl lg:text-6xl font-bold text-slate-800 text-center",
+    "text-4xl md:text-5xl font-bold text-slate-800 text-center",
 
   subtitle:
-    "text-center text-xl md:text-3xl font-semibold text-gray-600 mb-6",
+    "text-center text-xl md:text-2xl font-semibold text-gray-600 mb-6",
 
-  input:
-    "w-full px-4 py-4 border border-gray-300 bg-gray-50 focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition p-4 md:p-5 rounded-2xl mb-6 text-lg",
-
+ input:
+    "w-full px-4 py-3 border border-gray-300 bg-gray-50 focus:outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition rounded-2xl mb-6 text-base",
   button:
-    "w-full bg-primary text-white p-4 md:p-5 rounded-md hover:bg-primary/90 transition text-lg md:text-2xl font-semibold",
-
+    "w-full bg-primary text-white py-3 rounded-md hover:bg-primary/90 transition text-base font-semibold",
   link:
     "text-primary font-bold hover:underline text-lg",
-
-   header:
-  "bg-white/10 backdrop-blur-md text-white px-6 py-4 flex justify-between items-center",
+  header:
+   "bg-white/10 backdrop-blur-md text-white px-6 py-4 flex justify-between items-center",
 
 logo:
   "bg-transparent border-2 border-black text-black font-bold text-xl px-4 py-2 rounded-lg transition-all duration-300 hover:bg-white/20 hover:border-white hover:scale-110 hover:shadow-xl cursor-pointer",
