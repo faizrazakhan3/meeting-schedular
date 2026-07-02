@@ -108,6 +108,10 @@ function MeetingModal({
           await response.json();
 
         setParticipants(data);
+        
+        // Pre-populate selected users, filtering out the organizer
+        const nonOrganizerUsers = data.filter((user: any) => user.id !== user.created_by);
+        setSelectedUsers(nonOrganizerUsers);
 
       } catch (error) {
         console.error(error);

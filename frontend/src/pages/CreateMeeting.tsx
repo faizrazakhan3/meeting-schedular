@@ -41,6 +41,7 @@ function CreateMeeting() {
             Authorization:
               `Bearer ${token}`,
           },
+          cache: "no-store"
         }
       );
 
